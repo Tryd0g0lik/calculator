@@ -21,7 +21,39 @@ class Calculator {
     return expression.match(regex);
   }
 
+  toRPN(tokens) {
+    const output = [];
+    const operators = [];
+    const precedence = { '+': 1, '-': 1, '*': 2, '/': 2 };
 
+    tokens.forEach(token => {
+      if (!isNaN(token)) {
+        output.push(parseFloat(token));
+      } else if (token in this.operators) {
+        while (operators.length && precedence[operators[operators.length - 1]] >= precedence[token]) {
+          output.push(operators.pop());
+        }
+        operators.push(token);
+      }
+    });
+
+
+    return output;
+  }
+
+  calculateRPN(rpn) {
+    const stack = [];
+    rpn.forEach(token => {
+      if (typeof token === 'number') {
+        stack.push(token);
+      } else {
+        const b = stack.pop();
+        const a = stack.pop();
+        stack.push(this.operators[token](a, b));
+      }
+    });
+    return stack[0];
+  }
 }
 
-
+module.exports = Calculator;
