@@ -34,9 +34,19 @@ class Calculator {
           output.push(operators.pop());
         }
         operators.push(token);
+      } else if (token === '(') {
+        operators.push(token);
+      } else if (token === ')') {
+        while (operators.length && operators[operators.length - 1] !== '(') {
+          output.push(operators.pop());
+        }
+        operators.pop(); // Remove '('
       }
     });
 
+    while (operators.length) {
+      output.push(operators.pop());
+    }
 
     return output;
   }
